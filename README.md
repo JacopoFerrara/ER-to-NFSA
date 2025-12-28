@@ -1,3 +1,3 @@
 # ER-to-NFSA
 
-Lisp/Prolog based Re to NFSA compiler 
+Lisp/Prolog based REGEX to NFSA compiler 
