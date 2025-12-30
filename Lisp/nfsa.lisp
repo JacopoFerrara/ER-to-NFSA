@@ -20,24 +20,33 @@ delta
 		(finale (gensym)))
 	(cond ((atom RE) 
 		(make-automa
-		:stato_iniziale iniziale
-		:stato_finale finale
+		:stato-iniziale iniziale
+		:stato-finale finale
 		:delta (list(list iniziale RE finale))))
 	((eq (first RE) 'c)
 	(let ((automi (mapcar #'nfsa-compile-regex (rest RE))))
 		(make-automa
-		:stato_iniziale (automa-stato-iniziale ((car) (first automi)))
-		:stato_finale (automa-stato-finale ((cdr) (last automi)))
-		:delta ((apply #'append (mapcar #'(automa-delta))) append ())	
+		:stato-iniziale (automa-stato-iniziale (first automi))
+		:stato-finale (automa-stato-finale (first (last automi)))
+		:delta (append(apply #'append(mapcar #'automa-delta automi))(list(list (automa-stato-finale (first automi)) nil (automa-stato-iniziale (second automi)))))
 	))
 	((eq (first RE) 'a)
-	
+	(let ((automi (mapcar #'nfsa-compile-regex (rest RE))))
+		(make-automa
+		:stato-iniziale iniziale
+		:stato-finale finale
+		:delta (append (apply #'append(mapcar #'automa-delta automi))(list(list iniziale nil (automa-stato-iniziale (first automi)))(list iniziale nil (automa-stato-iniziale (second automi)))(list (automa-stato-finale (first automi)) nil finale)(list (automa-stato-finale (second automi)) nil finale))
+	))
 	)
 	((eq (first RE) 'z)
-	
-	
+	(let ((automi (mapcar #'nfsa-compile-regex (rest RE))))
+		(make-automa
+		:stato-iniziale (automa-stato-iniziale (first automi))
+		:stato-finale (automa-stato-finale (first (last automi)))
+		:delta (append(apply #'append(mapcar #'automa-delta automi))(list(list (automa-stato-finale (first automi)) nil (automa-stato-iniziale (second automi)))))
+	))
 	)
-	((eq (first RE) 'z)
+	((eq (first RE) 'o)
 	
 	
 	))
